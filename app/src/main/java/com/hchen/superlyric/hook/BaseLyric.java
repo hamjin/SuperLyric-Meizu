@@ -315,7 +315,8 @@ public abstract class BaseLyric extends HCBase {
                 }
             );
         }
-        public static void mockDevice(){
+
+        public static void mockDevice() {
             mockDevice(true);
         }
 
@@ -353,15 +354,20 @@ public abstract class BaseLyric extends HCBase {
                     boolean isLyric = ((notification.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0
                         || (notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
                     if (isLyric) {
-                        if (notification.tickerText != null) {
-                            sendLyric(notification.tickerText.toString());
-                        } else {
+                        if (notification.tickerText == null) {
                             sendStop();
-                        }
-                    } else {
-                        if (notification.tickerText != null && "网易云音乐正在播放".equals(notification.tickerText.toString()))
+                        } else if (notification.tickerText.toString().trim().isEmpty()) {
                             sendStop();
+                        } else if (notification.tickerText.toString().trim().contains("纯音乐") ||
+                                    notification.tickerText.toString().trim().contains("无歌词")) {
+                            sendStop();
+                        } else sendLyric(notification.tickerText.toString());
+
+                        return;
                     }
+
+                    if ("网易云音乐正在播放".equals(notification.tickerText.toString()))
+                        sendStop();
                 }
             };
         }
