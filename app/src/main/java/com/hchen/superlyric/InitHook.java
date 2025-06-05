@@ -78,7 +78,7 @@ public class InitHook extends HCEntrance {
             // DexKitUtils.init(loadPackageParam);
             if (loadPackageParam.appInfo != null) {
                 DexkitCache.init(
-                    "superlyric",
+                    "superlyric-meizu",
                     loadPackageParam.classLoader,
                     loadPackageParam.appInfo.sourceDir,
                     loadPackageParam.appInfo.dataDir
