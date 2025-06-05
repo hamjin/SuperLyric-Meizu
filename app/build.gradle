@@ -56,8 +56,8 @@ android {
         minSdk 30
         targetSdk sdk
         // noinspection HighAppVersionCode
-        versionCode 2025052700
-        versionName "2.5"
+        versionCode 2025060500
+        versionName "2.5-Meizu"
 
         ndk {
             // noinspection ChromeOsAbiSupport
