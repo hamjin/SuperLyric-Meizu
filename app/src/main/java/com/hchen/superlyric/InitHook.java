@@ -30,6 +30,7 @@ import com.hchen.hooktool.HCEntrance;
 import com.hchen.hooktool.HCInit;
 import com.hchen.hooktool.log.XposedLog;
 import com.hchen.superlyric.hook.music.Api;
+import com.hchen.superlyric.meizu.BuildConfig;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
