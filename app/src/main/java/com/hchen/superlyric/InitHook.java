@@ -29,7 +29,6 @@ import com.hchen.hooktool.HCBase;
 import com.hchen.hooktool.HCEntrance;
 import com.hchen.hooktool.HCInit;
 import com.hchen.hooktool.log.XposedLog;
-import com.hchen.superlyric.hook.music.Api;
 import com.hchen.superlyric.meizu.BuildConfig;
 
 import java.lang.reflect.InvocationTargetException;
@@ -74,11 +73,6 @@ public class InitHook extends HCEntrance {
     @Override
     public void onLoadPackage(@NonNull XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         mCacheBaseHCMap.clear();
-        if (!CollectMap.getAllPackageSet().contains(loadPackageParam.packageName)) {
-            HCInit.initLoadPackageParam(loadPackageParam);
-            new Api().onApplication().onLoadPackage();
-            return;
-        }
 
         try {
             // DexKitUtils.init(loadPackageParam);
