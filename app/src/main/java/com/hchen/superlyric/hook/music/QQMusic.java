@@ -30,7 +30,7 @@ import com.hchen.superlyric.hook.BaseLyric;
 public class QQMusic extends BaseLyric {
     @Override
     protected void init() {
-        MeizuHelper.mockDevice();
+        MeizuHelper.mockDevice(false);
         MeizuHelper.getMeizuNotificationLyric();
     }
 }

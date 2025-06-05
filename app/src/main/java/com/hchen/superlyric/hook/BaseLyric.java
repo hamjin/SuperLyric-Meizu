@@ -286,13 +286,16 @@ public abstract class BaseLyric extends HCBase {
         /**
          * 模拟魅族
          */
-        public static void mockDevice() {
+        public static void mockDevice(boolean hook) {
             setStaticField("android.os.Build", "BRAND", "meizu");
             setStaticField("android.os.Build", "MANUFACTURER", "Meizu");
             setStaticField("android.os.Build", "DEVICE", "m1892");
             setStaticField("android.os.Build", "DISPLAY", "Flyme");
             setStaticField("android.os.Build", "PRODUCT", "meizu_16thPlus_CN");
             setStaticField("android.os.Build", "MODEL", "meizu 16th Plus");
+
+            if (!hook)
+                return;
 
             meizu = findClass("com.hchen.superlyric.helper.MeiZuNotification", new PathClassLoader(HCData.getModulePath(), classLoader));
             hookMethod(Class.class, "forName", String.class,
@@ -311,6 +314,9 @@ public abstract class BaseLyric extends HCBase {
                     }
                 }
             );
+        }
+        public static void mockDevice(){
+            mockDevice(true);
         }
 
         public static void getMeizuNotificationLyric() {
