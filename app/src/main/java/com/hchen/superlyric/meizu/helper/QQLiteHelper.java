@@ -16,12 +16,12 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
 import static com.hchen.hooktool.core.CoreTool.existsClass;
 import static com.hchen.hooktool.core.CoreTool.hookMethod;
 import static com.hchen.hooktool.core.CoreTool.returnResult;
-import static com.hchen.superlyric.hook.LyricRelease.sendLyric;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.sendLyric;
 
 import com.hchen.hooktool.hook.IHook;
 

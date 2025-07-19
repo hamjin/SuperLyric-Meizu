@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
 import static com.hchen.hooktool.core.CoreTool.hook;
 import static com.hchen.hooktool.log.XposedLog.logE;

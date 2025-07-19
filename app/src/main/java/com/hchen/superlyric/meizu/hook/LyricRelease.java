@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.hook;
+package com.hchen.superlyric.meizu.hook;
 
 import android.app.Application;
 import android.content.Context;
@@ -34,7 +34,7 @@ import androidx.annotation.NonNull;
 import com.hchen.hooktool.HCBase;
 import com.hchen.hooktool.HCData;
 import com.hchen.hooktool.hook.IHook;
-import com.hchen.superlyric.data.SuperLyricKey;
+import com.hchen.superlyric.meizu.data.SuperLyricKey;
 import com.hchen.superlyricapi.ISuperLyricDistributor;
 import com.hchen.superlyricapi.SuperLyricData;
 

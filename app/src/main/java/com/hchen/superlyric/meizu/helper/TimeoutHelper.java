@@ -16,10 +16,10 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
-import static com.hchen.superlyric.hook.LyricRelease.audioManager;
-import static com.hchen.superlyric.hook.LyricRelease.sendStop;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.audioManager;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.sendStop;
 
 import java.util.Timer;
 import java.util.TimerTask;

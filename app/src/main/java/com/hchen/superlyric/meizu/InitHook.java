@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric;
+package com.hchen.superlyric.meizu;
 
 import static com.hchen.hooktool.HCInit.LOG_D;
 import static com.hchen.hooktool.HCInit.LOG_I;
@@ -29,7 +29,6 @@ import com.hchen.hooktool.HCBase;
 import com.hchen.hooktool.HCEntrance;
 import com.hchen.hooktool.HCInit;
 import com.hchen.hooktool.log.XposedLog;
-import com.hchen.superlyric.hook.music.Api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * @author 焕晨HChen
  */
 public class InitHook extends HCEntrance {
-    private static final String TAG = "SuperLyric";
+    private static final String TAG = "SuperLyric-Meizu";
     private static final HashMap<String, HCBase> mCacheBaseHCMap = new HashMap<>();
 
     @NonNull
@@ -52,10 +51,10 @@ public class InitHook extends HCEntrance {
     public HCInit.BasicData initHC(@NonNull HCInit.BasicData basicData) {
         return basicData
             .setTag(TAG)
-            .setPrefsName("super_lyric_prefs")
+            .setPrefsName("super_lyric_meizu_prefs")
             .setLogLevel(BuildConfig.DEBUG ? LOG_D : LOG_I)
             .setModulePackageName(BuildConfig.APPLICATION_ID)
-            .setLogExpandPath("com.hchen.superlyric.hook")
+            .setLogExpandPath("com.hchen.superlyric.meizu.hook")
             .setLogExpandIgnoreClassNames("LyricRelease");
     }
 
@@ -73,17 +72,11 @@ public class InitHook extends HCEntrance {
     @Override
     public void onLoadPackage(@NonNull XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         mCacheBaseHCMap.clear();
-        if (!CollectMap.getAllPackageSet().contains(loadPackageParam.packageName)) {
-            HCInit.initLoadPackageParam(loadPackageParam);
-            new Api().onApplication().onLoadPackage();
-            return;
-        }
 
         try {
-            // DexKitUtils.init(loadPackageParam);
             if (loadPackageParam.appInfo != null) {
                 DexkitCache.init(
-                    "superlyric",
+                    "superlyric-meizu",
                     loadPackageParam.classLoader,
                     loadPackageParam.appInfo.sourceDir,
                     loadPackageParam.appInfo.dataDir
