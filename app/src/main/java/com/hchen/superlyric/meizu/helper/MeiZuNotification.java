@@ -16,20 +16,16 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.hook.music;
+package com.hchen.superlyric.meizu.helper;
 
-import com.hchen.collect.Collect;
-import com.hchen.superlyric.helper.MeizuHelper;
-import com.hchen.superlyric.hook.LyricRelease;
+import android.app.Notification;
 
 /**
- * LMusic
+ * 魅族状态栏歌词基本参数
+ *
+ * @author 焕晨HChen
  */
-@Collect(targetPackage = "com.lalilu.lmusic")
-public class LMusic extends LyricRelease {
-    @Override
-    protected void init() {
-        MeizuHelper.depthDeviceMock();
-        MeizuHelper.hookNotificationLyric();
-    }
+public class MeiZuNotification extends Notification {
+    public static final int FLAG_ALWAYS_SHOW_TICKER = 0x01000000;
+    public static final int FLAG_ONLY_UPDATE_TICKER = 0x02000000;
 }

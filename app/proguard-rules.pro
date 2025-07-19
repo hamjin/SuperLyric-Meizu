@@ -22,8 +22,8 @@
 
 -keep class * extends com.hchen.hooktool.HCEntrance
 -keep class * extends com.hchen.hooktool.HCBase
--keep class com.hchen.superlyric.hook.**
--keep class com.hchen.superlyric.hook.**$*
+-keep class com.hchen.superlyric.meizu.hook.**
+-keep class com.hchen.superlyric.meizu.hook.**$*
 -keep class  com.hchen.hooktool.HCState {
     static boolean isXposedEnabled();
     static java.lang.String getFramework();
@@ -31,4 +31,4 @@
 }
 -keep class com.hchen.superlyricapi.** {*;}
 -keep class com.hchen.dexkitcache.DexkitCache$MemberData {*;}
--keep class com.hchen.superlyric.helper.MeiZuNotification {*;}
+-keep class com.hchen.superlyric.meizu.helper.MeiZuNotification {*;}

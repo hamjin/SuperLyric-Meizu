@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.hook;
+package com.hchen.superlyric.meizu.hook;
 
 import android.app.Application;
 import android.content.Context;
@@ -35,7 +35,7 @@ import androidx.annotation.NonNull;
 import com.hchen.hooktool.HCBase;
 import com.hchen.hooktool.HCData;
 import com.hchen.hooktool.hook.IHook;
-import com.hchen.superlyric.data.SuperLyricKey;
+import com.hchen.superlyric.meizu.data.SuperLyricKey;
 import com.hchen.superlyricapi.ISuperLyricDistributor;
 import com.hchen.superlyricapi.SuperLyricData;
 
@@ -47,60 +47,31 @@ import java.util.Objects;
  * @author 焕晨HChen
  */
 public abstract class LyricRelease extends HCBase {
-    private static ISuperLyricDistributor iSuperLyricDistributor;
     public static AudioManager audioManager;
     public static String packageName;
     public static long versionCode = -1L;
     public static String versionName = "unknown";
-
-    @Override
-    @CallSuper
-    protected void initApplicationAfter(@NonNull Context context) {
-        packageName = context.getPackageName();
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-
-        Intent intent = new Intent(SuperLyricKey.SUPER_LYRIC);
-        intent.putExtra(SuperLyricKey.SUPER_LYRIC_EXEMPT_PACKAGE, packageName);
-        context.sendBroadcast(intent);
-
-        Intent intentBinder = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        Objects.requireNonNull(intentBinder, "Failed to obtain designated binder intent, can't use SuperLyric!!");
-
-        Bundle bundle = intentBinder.getBundleExtra(SuperLyricKey.SUPER_LYRIC_INFO);
-        Objects.requireNonNull(bundle, "Failed to obtain designated binder bundle, please try to reboot system!!");
-
-        iSuperLyricDistributor = ISuperLyricDistributor.Stub.asInterface(bundle.getBinder(SuperLyricKey.SUPER_LYRIC_BINDER));
-
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
-            versionName = packageInfo.versionName;
-            versionCode = packageInfo.getLongVersionCode();
-            logI(TAG, "App package: " + packageName + ", version: " + versionName + ", code: " + versionCode);
-        } catch (PackageManager.NameNotFoundException e) {
-            logW(TAG, "Failed to obtain package info!!", e);
-        }
-
-        logD(TAG, "Success to obtain binder: " + iSuperLyricDistributor + ", caller package: " + packageName);
-    }
+    private static ISuperLyricDistributor iSuperLyricDistributor;
+    private static String lastLyric;
 
     /**
      * Hook 热更新服务，用于更改当前 classloader
      */
     public static void hookTencentTinker() {
         hookMethod("com.tencent.tinker.loader.TinkerLoader",
-            "tryLoad",
-            "com.tencent.tinker.loader.app.TinkerApplication",
-            new IHook() {
-                @Override
-                public void after() {
-                    Intent intent = (Intent) getResult();
-                    Application application = (Application) getArg(0);
-                    int code = intent.getIntExtra("intent_return_code", -2);
-                    if (code == 0) {
-                        HCData.setClassLoader(application.getClassLoader());
+                "tryLoad",
+                "com.tencent.tinker.loader.app.TinkerApplication",
+                new IHook() {
+                    @Override
+                    public void after() {
+                        Intent intent = (Intent) getResult();
+                        Application application = (Application) getArg(0);
+                        int code = intent.getIntExtra("intent_return_code", -2);
+                        if (code == 0) {
+                            HCData.setClassLoader(application.getClassLoader());
+                        }
                     }
                 }
-            }
         );
     }
 
@@ -109,13 +80,13 @@ public abstract class LyricRelease extends HCBase {
      */
     public static void fakeBluetoothA2dpEnabled() {
         hookMethod("android.media.AudioManager",
-            "isBluetoothA2dpOn",
-            returnResult(true)
+                "isBluetoothA2dpOn",
+                returnResult(true)
         );
 
         hookMethod("android.bluetooth.BluetoothAdapter",
-            "isEnabled",
-            returnResult(true)
+                "isEnabled",
+                returnResult(true)
         );
     }
 
@@ -124,22 +95,20 @@ public abstract class LyricRelease extends HCBase {
      */
     public static void getMediaMetadataCompatLyric() {
         hookMethod("android.support.v4.media.MediaMetadataCompat$Builder",
-            "putString",
-            String.class, String.class,
-            new IHook() {
-                @Override
-                public void after() {
-                    if (Objects.equals("android.media.metadata.TITLE", getArg(0))) {
-                        String lyric = (String) getArg(1);
-                        if (lyric == null) return;
-                        sendLyric(lyric);
+                "putString",
+                String.class, String.class,
+                new IHook() {
+                    @Override
+                    public void after() {
+                        if (Objects.equals("android.media.metadata.TITLE", getArg(0))) {
+                            String lyric = (String) getArg(1);
+                            if (lyric == null) return;
+                            sendLyric(lyric);
+                        }
                     }
                 }
-            }
         );
     }
-
-    private static String lastLyric;
 
     public static void sendLyric(String lyric) {
         sendLyric(lyric, 0);
@@ -171,11 +140,11 @@ public abstract class LyricRelease extends HCBase {
             lastLyric = lyric;
 
             iSuperLyricDistributor.onSuperLyric(
-                new SuperLyricData()
-                    .setPackageName(packageName)
-                    .setLyric(lyric)
-                    .setDelay(delay)
-                    .setBase64Icon(base64Icon)
+                    new SuperLyricData()
+                            .setPackageName(packageName)
+                            .setLyric(lyric)
+                            .setDelay(delay)
+                            .setBase64Icon(base64Icon)
             );
         } catch (RemoteException e) {
             logE("LyricRelease", "Failed to send lyric!!", e);
@@ -199,8 +168,8 @@ public abstract class LyricRelease extends HCBase {
      */
     public static void sendStop(@NonNull String packageName) {
         sendStop(
-            new SuperLyricData()
-                .setPackageName(packageName)
+                new SuperLyricData()
+                        .setPackageName(packageName)
         );
     }
 
@@ -238,5 +207,35 @@ public abstract class LyricRelease extends HCBase {
         }
 
         logD("LyricRelease", "Send data: " + data);
+    }
+
+    @Override
+    @CallSuper
+    protected void initApplicationAfter(@NonNull Context context) {
+        packageName = context.getPackageName();
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        Intent intent = new Intent(SuperLyricKey.SUPER_LYRIC);
+        intent.putExtra(SuperLyricKey.SUPER_LYRIC_EXEMPT_PACKAGE, packageName);
+        context.sendBroadcast(intent);
+
+        Intent intentBinder = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        Objects.requireNonNull(intentBinder, "Failed to obtain designated binder intent, can't use SuperLyric!!");
+
+        Bundle bundle = intentBinder.getBundleExtra(SuperLyricKey.SUPER_LYRIC_INFO);
+        Objects.requireNonNull(bundle, "Failed to obtain designated binder bundle, please try to reboot system!!");
+
+        iSuperLyricDistributor = ISuperLyricDistributor.Stub.asInterface(bundle.getBinder(SuperLyricKey.SUPER_LYRIC_BINDER));
+
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            versionName = packageInfo.versionName;
+            versionCode = packageInfo.getLongVersionCode();
+            logI(TAG, "App package: " + packageName + ", version: " + versionName + ", code: " + versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            logW(TAG, "Failed to obtain package info!!", e);
+        }
+
+        logD(TAG, "Success to obtain binder: " + iSuperLyricDistributor + ", caller package: " + packageName);
     }
 }

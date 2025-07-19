@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.data;
+package com.hchen.superlyric.meizu.data;
 
 import android.content.Intent;
 import android.os.Bundle;

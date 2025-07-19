@@ -16,12 +16,12 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
 import static com.hchen.hooktool.core.CoreTool.existsClass;
 import static com.hchen.hooktool.core.CoreTool.hookMethod;
 import static com.hchen.hooktool.core.CoreTool.returnResult;
-import static com.hchen.superlyric.hook.LyricRelease.sendLyric;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.sendLyric;
 
 import com.hchen.hooktool.hook.IHook;
 
@@ -44,23 +44,23 @@ public class QQLiteHelper {
         if (!isSupportQQLite()) return;
 
         hookMethod("com.tencent.qqmusiccommon.util.music.RemoteLyricController",
-            "BluetoothA2DPConnected",
-            returnResult(true)
+                "BluetoothA2DPConnected",
+                returnResult(true)
         );
 
         hookMethod("com.tencent.qqmusiccommon.util.music.RemoteControlManager",
-            "updataMetaData",
-            "com.tencent.qqmusic.core.song.SongInfo", String.class,
-            new IHook() {
-                @Override
-                public void before() {
-                    String lyric = (String) getArg(1);
-                    if (lyric == null || lyric.isEmpty()) return;
-                    if (Objects.equals(lyric, "NEED_NOT_UPDATE_TITLE")) return;
+                "updataMetaData",
+                "com.tencent.qqmusic.core.song.SongInfo", String.class,
+                new IHook() {
+                    @Override
+                    public void before() {
+                        String lyric = (String) getArg(1);
+                        if (lyric == null || lyric.isEmpty()) return;
+                        if (Objects.equals(lyric, "NEED_NOT_UPDATE_TITLE")) return;
 
-                    sendLyric(lyric);
+                        sendLyric(lyric);
+                    }
                 }
-            }
         );
     }
 }

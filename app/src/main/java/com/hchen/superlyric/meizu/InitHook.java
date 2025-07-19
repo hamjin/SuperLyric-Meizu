@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric;
+package com.hchen.superlyric.meizu;
 
 import static com.hchen.hooktool.HCInit.LOG_D;
 import static com.hchen.hooktool.HCInit.LOG_I;
@@ -30,7 +30,6 @@ import com.hchen.dexkitcache.DexkitCache;
 import com.hchen.hooktool.HCBase;
 import com.hchen.hooktool.HCEntrance;
 import com.hchen.hooktool.HCInit;
-import com.hchen.superlyric.hook.music.Api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -85,86 +84,38 @@ public class InitHook extends HCEntrance {
         });
     }
 
-    private static class HookClassData {
-        @NonNull
-        Class<?> clazz;
-        HCBase hcBase;
-        @NonNull
-        String packageName;
-        @NonNull
-        String fullClassPath;
-        boolean isOnLoadPackage;
-        boolean isOnApplication;
-        boolean isLoadOnZygote;
-
-        public HookClassData(@NonNull Class<?> clazz, @NonNull String packageName, @NonNull String fullClassPath,
-                             boolean isOnLoadPackage, boolean isOnApplication, boolean isLoadOnZygote) {
-            this.clazz = clazz;
-            this.packageName = packageName;
-            this.fullClassPath = fullClassPath;
-            this.isOnLoadPackage = isOnLoadPackage;
-            this.isOnApplication = isOnApplication;
-            this.isLoadOnZygote = isLoadOnZygote;
-        }
-
-        public void initialization() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-            if (hcBase == null) {
-                hcBase = (HCBase) clazz.getDeclaredConstructor().newInstance();
-            }
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return "HookClassData{" +
-                "clazz=" + clazz +
-                ", packageName='" + packageName + '\'' +
-                ", fullClassPath='" + fullClassPath + '\'' +
-                ", isOnLoadPackage=" + isOnLoadPackage +
-                ", isOnApplication=" + isOnApplication +
-                ", isLoadOnZygote=" + isLoadOnZygote +
-                '}';
-        }
-    }
-
     @NonNull
     @Override
     public HCInit.BasicData initHC(@NonNull HCInit.BasicData basicData) {
         return basicData
-            .setTag(TAG)
-            .setPrefsName("super_lyric_prefs")
-            .setLogLevel(BuildConfig.DEBUG ? LOG_D : LOG_I)
-            .setModulePackageName(BuildConfig.APPLICATION_ID)
-            .setLogExpandPath("com.hchen.superlyric.hook")
-            .setLogExpandIgnoreClassNames("LyricRelease");
+                .setTag(TAG)
+                .setPrefsName("super_lyric_prefs")
+                .setLogLevel(BuildConfig.DEBUG ? LOG_D : LOG_I)
+                .setModulePackageName(BuildConfig.APPLICATION_ID)
+                .setLogExpandPath("com.hchen.superlyric.hook")
+                .setLogExpandIgnoreClassNames("LyricRelease");
     }
 
     @NonNull
     @Override
     public String[] ignorePackageNameList() {
         return new String[]{
-            "com.miui.contentcatcher",
-            "com.android.providers.settings",
-            "com.android.server.telecom",
-            "com.google.android.webview"
+                "com.miui.contentcatcher",
+                "com.android.providers.settings",
+                "com.android.server.telecom",
+                "com.google.android.webview"
         };
     }
 
     @Override
     public void onLoadPackage(@NonNull XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
-        if (!CollectMap.getTargetPackages().contains(loadPackageParam.packageName)) {
-            HCInit.initLoadPackageParam(loadPackageParam);
-            new Api().onApplication().onLoadPackage();
-            return;
-        }
-
         try {
             if (loadPackageParam.appInfo != null) {
                 DexkitCache.init(
-                    "superlyric",
-                    loadPackageParam.classLoader,
-                    loadPackageParam.appInfo.sourceDir,
-                    loadPackageParam.appInfo.dataDir
+                        "superlyric",
+                        loadPackageParam.classLoader,
+                        loadPackageParam.appInfo.sourceDir,
+                        loadPackageParam.appInfo.dataDir
                 );
             }
             if (mHookClassDataMap.containsKey(loadPackageParam.packageName)) {
@@ -201,6 +152,48 @@ public class InitHook extends HCEntrance {
                     logE(TAG, "Failed to load hook on zygote phase: " + data.fullClassPath, throwable);
                 }
             }
+        }
+    }
+
+    private static class HookClassData {
+        @NonNull
+        Class<?> clazz;
+        HCBase hcBase;
+        @NonNull
+        String packageName;
+        @NonNull
+        String fullClassPath;
+        boolean isOnLoadPackage;
+        boolean isOnApplication;
+        boolean isLoadOnZygote;
+
+        public HookClassData(@NonNull Class<?> clazz, @NonNull String packageName, @NonNull String fullClassPath,
+                             boolean isOnLoadPackage, boolean isOnApplication, boolean isLoadOnZygote) {
+            this.clazz = clazz;
+            this.packageName = packageName;
+            this.fullClassPath = fullClassPath;
+            this.isOnLoadPackage = isOnLoadPackage;
+            this.isOnApplication = isOnApplication;
+            this.isLoadOnZygote = isLoadOnZygote;
+        }
+
+        public void initialization() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+            if (hcBase == null) {
+                hcBase = (HCBase) clazz.getDeclaredConstructor().newInstance();
+            }
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "HookClassData{" +
+                    "clazz=" + clazz +
+                    ", packageName='" + packageName + '\'' +
+                    ", fullClassPath='" + fullClassPath + '\'' +
+                    ", isOnLoadPackage=" + isOnLoadPackage +
+                    ", isOnApplication=" + isOnApplication +
+                    ", isLoadOnZygote=" + isLoadOnZygote +
+                    '}';
         }
     }
 }

@@ -16,7 +16,7 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
 import static com.hchen.hooktool.core.CoreTool.hook;
 import static com.hchen.hooktool.log.XposedLog.logE;
@@ -55,12 +55,12 @@ public class ScreenHelper {
                 @Override
                 public MethodDataList dexkit(@NonNull DexKitBridge bridge) throws ReflectiveOperationException {
                     return bridge.findMethod(FindMethod.create()
-                        .matcher(MethodMatcher.create()
-                            .usingStrings("android.intent.action.SCREEN_OFF")
-                            .returnType(void.class)
-                            .name("onReceive")
-                            .paramTypes(Context.class, Intent.class)
-                        )
+                            .matcher(MethodMatcher.create()
+                                    .usingStrings("android.intent.action.SCREEN_OFF")
+                                    .returnType(void.class)
+                                    .name("onReceive")
+                                    .paramTypes(Context.class, Intent.class)
+                            )
                     );
                 }
             });
@@ -72,15 +72,15 @@ public class ScreenHelper {
                         logI(TAG, "[screenOffNotStopLyric]: hook method: " + method);
 
                         hook(method,
-                            new IHook() {
-                                @Override
-                                public void before() {
-                                    Intent intent = (Intent) getArg(1);
-                                    if (TextUtils.equals(intent.getAction(), Intent.ACTION_SCREEN_OFF)) {
-                                        returnNull();
+                                new IHook() {
+                                    @Override
+                                    public void before() {
+                                        Intent intent = (Intent) getArg(1);
+                                        if (TextUtils.equals(intent.getAction(), Intent.ACTION_SCREEN_OFF)) {
+                                            returnNull();
+                                        }
                                     }
                                 }
-                            }
                         );
                     }
                 }

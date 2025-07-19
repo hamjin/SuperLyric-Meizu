@@ -16,20 +16,19 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.hook.music;
+package com.hchen.superlyric.meizu.helper;
 
-import com.hchen.collect.Collect;
-import com.hchen.superlyric.helper.MeizuHelper;
-import com.hchen.superlyric.hook.LyricRelease;
+import static com.hchen.hooktool.core.CoreTool.setStaticField;
 
 /**
- * MobileMusic
+ * 模拟 OPPO 设备
+ *
+ * @author 焕晨HChen
  */
-@Collect(targetPackage = "cmccwm.mobilemusic")
-public class MobileMusic extends LyricRelease {
-    @Override
-    protected void init() {
-        MeizuHelper.depthDeviceMock();
-        MeizuHelper.hookNotificationLyric();
+public class OPPOHelper {
+    public static void mockDevice() {
+        setStaticField("android.os.Build", "BRAND", "oppo");
+        setStaticField("android.os.Build", "MANUFACTURER", "Oppo");
+        setStaticField("android.os.Build", "DISPLAY", "Color");
     }
 }

@@ -16,13 +16,13 @@
 
  * Copyright (C) 2023-2025 HChenX
  */
-package com.hchen.superlyric.helper;
+package com.hchen.superlyric.meizu.helper;
 
 import static com.hchen.hooktool.core.CoreTool.existsClass;
 import static com.hchen.hooktool.core.CoreTool.hookMethod;
 import static com.hchen.hooktool.core.CoreTool.setStaticField;
-import static com.hchen.superlyric.hook.LyricRelease.sendLyric;
-import static com.hchen.superlyric.hook.LyricRelease.sendStop;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.sendLyric;
+import static com.hchen.superlyric.meizu.hook.LyricRelease.sendStop;
 import static com.hchen.superlyricapi.SuperLyricTool.drawableToBase64;
 
 import android.app.AndroidAppHelper;
@@ -52,19 +52,19 @@ public class MeizuHelper {
         setStaticField("android.os.Build", "DISPLAY", "Flyme");
 
         hookMethod(Class.class, "forName", String.class,
-            new IHook() {
-                @Override
-                public void before() {
-                    try {
-                        if (TextUtils.equals("android.app.Notification", (String) getArg(0))) {
-                            setResult(MeiZuNotification.class);
-                            return;
+                new IHook() {
+                    @Override
+                    public void before() {
+                        try {
+                            if (TextUtils.equals("android.app.Notification", (String) getArg(0))) {
+                                setResult(MeiZuNotification.class);
+                                return;
+                            }
+                            setResult(HCData.getClassLoader().loadClass((String) getArg(0)));
+                        } catch (Throwable ignore) {
                         }
-                        setResult(HCData.getClassLoader().loadClass((String) getArg(0)));
-                    } catch (Throwable ignore) {
                     }
                 }
-            }
         );
     }
 
@@ -80,42 +80,42 @@ public class MeizuHelper {
         setStaticField("android.os.Build", "MODEL", "meizu 16th Plus");
 
         hookMethod(Class.class, "forName", String.class,
-            new IHook() {
-                @Override
-                public void before() {
-                    try {
-                        if (TextUtils.equals("android.app.Notification", (String) getArg(0))) {
-                            setResult(MeiZuNotification.class);
-                            return;
+                new IHook() {
+                    @Override
+                    public void before() {
+                        try {
+                            if (TextUtils.equals("android.app.Notification", (String) getArg(0))) {
+                                setResult(MeiZuNotification.class);
+                                return;
+                            }
+                            setResult(HCData.getClassLoader().loadClass((String) getArg(0)));
+                        } catch (Throwable ignore) {
                         }
-                        setResult(HCData.getClassLoader().loadClass((String) getArg(0)));
-                    } catch (Throwable ignore) {
                     }
                 }
-            }
         );
     }
 
     public static void hookNotificationLyric() {
         if (existsClass("androidx.media3.common.util.Util")) {
             hookMethod("androidx.media3.common.util.Util",
-                "setForegroundServiceNotification",
-                Service.class, int.class, Notification.class, int.class, String.class,
-                createNotificationHook()
+                    "setForegroundServiceNotification",
+                    Service.class, int.class, Notification.class, int.class, String.class,
+                    createNotificationHook()
             );
         }
         if (existsClass("androidx.core.app.NotificationManagerCompat")) {
             hookMethod("androidx.core.app.NotificationManagerCompat",
-                "notify",
-                String.class, int.class, Notification.class,
-                createNotificationHook()
+                    "notify",
+                    String.class, int.class, Notification.class,
+                    createNotificationHook()
             );
         }
         if (existsClass("android.app.NotificationManager")) {
             hookMethod("android.app.NotificationManager",
-                "notify",
-                String.class, int.class, Notification.class,
-                createNotificationHook()
+                    "notify",
+                    String.class, int.class, Notification.class,
+                    createNotificationHook()
             );
         }
     }
@@ -128,7 +128,7 @@ public class MeizuHelper {
                 if (notification == null) return;
 
                 boolean isLyric = ((notification.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0 ||
-                    (notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
+                        (notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
                 if (isLyric) {
                     if (notification.tickerText != null) {
                         Context context = AndroidAppHelper.currentApplication();
