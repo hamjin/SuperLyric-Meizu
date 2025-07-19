@@ -41,6 +41,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SuperLyric"
+rootProject.name = "SuperLyric-Meizu"
 include ':app'
 include ':collect'
