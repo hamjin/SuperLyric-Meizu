@@ -1,0 +1,48 @@
+/*
+ * This file is part of SuperLyric.
+
+ * SuperLyric is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+ * Copyright (C) 2023-2025 HChenX
+ */
+package com.hchen.superlyric.meizu.hook.music;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import com.hchen.collect.Collect;
+import com.hchen.superlyric.meizu.helper.MeizuHelper;
+import com.hchen.superlyric.meizu.hook.LyricRelease;
+
+/**
+ * QQ 音乐
+ *
+ * @author 焕晨HChen
+ */
+@Collect(targetPackage = "com.tencent.qqmusic")
+public class QQMusic extends LyricRelease {
+    @Override
+    protected void init() {
+        hookTencentTinker();
+        MeizuHelper.normalDeviceMock();
+        MeizuHelper.hookNotificationLyric();
+    }
+
+    @Override
+    protected void initApplicationAfter(@NonNull Context context) {
+        super.initApplicationAfter(context);
+        MeizuHelper.depthDeviceMock();
+    }
+}
