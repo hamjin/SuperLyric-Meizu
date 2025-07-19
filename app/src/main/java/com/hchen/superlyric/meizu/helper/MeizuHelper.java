@@ -118,6 +118,13 @@ public class MeizuHelper {
                         (notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
                 if (isLyric) {
                     if (notification.tickerText != null) {
+                        if (notification.tickerText.toString().trim().isEmpty()) {
+                            return;
+                        } else if (notification.tickerText.toString().trim().contains("纯音乐") ||
+                                notification.tickerText.toString().trim().contains("无歌词") ||
+                                notification.tickerText.toString().trim().contains("歌曲已暂停，即将隐藏歌词")) {
+                            sendStop();
+                        }
                         Context context = AndroidAppHelper.currentApplication();
 
                         String base64Icon = null;
@@ -137,7 +144,7 @@ public class MeizuHelper {
                         sendStop();
                     }
                 } else {
-                    if (notification.tickerText != null && "网易云音乐正在播放".equals(notification.tickerText.toString()))
+                    if ("网易云音乐正在播放".equals(notification.tickerText.toString()))
                         sendStop();
                 }
             }
