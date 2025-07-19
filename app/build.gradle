@@ -59,7 +59,7 @@ android {
         targetSdk sdk
         // noinspection HighAppVersionCode
         versionCode 2025110601
-        versionName "2.8"
+        versionName "2.8-Meizu"
 
         ndk {
             // noinspection ChromeOsAbiSupport
