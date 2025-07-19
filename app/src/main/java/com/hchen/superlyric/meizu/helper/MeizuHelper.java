@@ -140,6 +140,9 @@ public class MeizuHelper {
                     } else {
                         sendStop();
                     }
+                } else {
+                    if (notification.tickerText != null && "网易云音乐正在播放".equals(notification.tickerText.toString()))
+                        sendStop();
                 }
             }
         };
