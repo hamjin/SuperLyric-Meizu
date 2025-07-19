@@ -57,7 +57,7 @@ android {
         targetSdk sdk
         // noinspection HighAppVersionCode
         versionCode 2025071800
-        versionName "2.7"
+        versionName "2.7-Meizu"
 
         ndk {
             // noinspection ChromeOsAbiSupport
