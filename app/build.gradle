@@ -3,8 +3,8 @@ plugins {
 }
 
 android {
-    def apk = "SuperLyric"
-    def pkg = "com.hchen.superlyric"
+    def apk = "SuperLyric-Meizu"
+    def pkg = "com.hchen.superlyric.meizu"
     def sdk = 36
 
     Properties properties = new Properties()
