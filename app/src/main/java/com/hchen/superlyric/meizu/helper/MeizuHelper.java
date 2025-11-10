@@ -50,35 +50,22 @@ public class MeizuHelper {
      */
     public static void shallowLayerDeviceMock() {
         setStaticField("android.os.Build", "DISPLAY", "Flyme");
+    }
 
-        hookMethod(Class.class, "forName", String.class,
-                new IHook() {
-                    @Override
-                    public void before() {
-                        try {
-                            if (TextUtils.equals("android.app.Notification", (String) getArg(0))) {
-                                setResult(MeiZuNotification.class);
-                                return;
-                            }
-                            setResult(HCData.getClassLoader().loadClass((String) getArg(0)));
-                        } catch (Throwable ignore) {
-                        }
-                    }
-                }
-        );
+    public static void normalDeviceMock() {
+        shallowLayerDeviceMock();
+        setStaticField("android.os.Build", "BRAND", "meizu");
+        setStaticField("android.os.Build", "MANUFACTURER", "Meizu");
+        setStaticField("android.os.Build", "DEVICE", "m1892");
+        setStaticField("android.os.Build", "PRODUCT", "meizu_16thPlus_CN");
+        setStaticField("android.os.Build", "MODEL", "meizu 16th Plus");
     }
 
     /**
      * 深度模拟魅族
      */
     public static void depthDeviceMock() {
-        setStaticField("android.os.Build", "BRAND", "meizu");
-        setStaticField("android.os.Build", "MANUFACTURER", "Meizu");
-        setStaticField("android.os.Build", "DEVICE", "m1892");
-        setStaticField("android.os.Build", "DISPLAY", "Flyme");
-        setStaticField("android.os.Build", "PRODUCT", "meizu_16thPlus_CN");
-        setStaticField("android.os.Build", "MODEL", "meizu 16th Plus");
-
+        normalDeviceMock();
         hookMethod(Class.class, "forName", String.class,
                 new IHook() {
                     @Override
